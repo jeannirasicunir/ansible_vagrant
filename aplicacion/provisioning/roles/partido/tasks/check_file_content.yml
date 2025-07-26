@@ -1,0 +1,14 @@
+---
+
+- name: Include variables
+  include_vars: "{{ role_path }}/defaults/partido_vars.yml"
+
+- name: Read file content from remote host
+  slurp:
+    src: "{{ file_path }}"
+  register: file_content
+
+- name: Print file content
+  debug:
+    msg: "{{ file_content.content | b64decode }}"
+

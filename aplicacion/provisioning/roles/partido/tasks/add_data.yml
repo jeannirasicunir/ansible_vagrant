@@ -1,0 +1,50 @@
+---
+
+- name: Include variables
+  include_vars: "{{ role_path }}/defaults/partido_vars.yml"
+
+- name: Add header to file
+  ansible.builtin.lineinfile:
+    path: "{{ file_path }}"
+    line: "** INFORMACION DEL PARTIDO UNIR **"
+    insertafter: EOF
+
+- name: Add first player
+  vars:
+    first_name: "Jeannira"
+    last_name: "Sic"
+    city: "Guatemala"
+  ansible.builtin.blockinfile:
+    path: "{{ file_path }}"
+    marker: "# {mark} - FIRST PLAYER"
+    block: |
+      First Name:  {{ first_name }}
+      Last Name: {{ last_name }}
+      City: {{ city }}
+      id: {{ id_tenista1 }}
+    insertafter: EOF
+
+- name: Fetch data from API
+  ansible.builtin.uri:
+    url: "https://randomuser.me/api/?results=1"
+    method: GET
+    return_content: yes
+    status_code: 200
+  register: api_response
+
+- name: Extract first user details
+  ansible.builtin.set_fact:
+    first_user: "{{ api_response.json.results[0] }}"
+
+- name: Add second player
+  ansible.builtin.blockinfile:
+    path: "{{ file_path }}"
+    marker: "# {mark} - SECOND PLAYER"
+    block: |
+      First Name: {{ first_user.name.first }}
+      Last Name: {{ first_user.name.last }}
+      City: {{ first_user.location.city }}
+      ID: {{ first_user.id.value }}
+
+      Fecha: {{ now() }}
+    insertafter: EOF

@@ -1,0 +1,11 @@
+---
+# tasks/main.yml
+
+- name: Create file
+  include_tasks: create_file.yml
+
+- name: Add data to file
+  include_tasks: add_data.yml
+
+- name: Check file content
+  include_tasks: check_file_content.yml

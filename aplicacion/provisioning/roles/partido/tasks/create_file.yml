@@ -1,0 +1,11 @@
+---
+
+- name: Include variables
+  include_vars: "{{ role_path }}/defaults/partido_vars.yml"
+
+- name: Create file
+  file:
+    path: "{{ file_path }}"
+    state: touch
+    mode: '0644'
+      
